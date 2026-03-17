@@ -26,6 +26,7 @@
 ```lua
 {
   'chenchuan01/nvim-autoxjs-lsp',
+  build = './build.sh',
   config = function()
     require('autoxjs-lsp').setup()
   end,
