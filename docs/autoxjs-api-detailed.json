@@ -1,0 +1,3250 @@
+{
+  "metadata": {
+    "source": "AutoX.js v7 API Documentation",
+    "version": "v7 (Rhino API)",
+    "created_date": "2026-03-17",
+    "description": "AutoX.js v7 详细 API 文档，包含所有核心模块的函数、参数、返回值和示例",
+    "total_modules": 13,
+    "note": "由于网络限制，部分内容基于 AutoX.js 标准 API 规范生成"
+  },
+  "modules": [
+    {
+      "id": "app",
+      "name": "app",
+      "title": "APP 应用",
+      "description": "提供应用管理、启动、信息获取等功能",
+      "apis": [
+        {
+          "name": "app.launchApp",
+          "description": "通过应用名称启动应用",
+          "params": [
+            {
+              "name": "appName",
+              "type": "string",
+              "required": true,
+              "description": "应用名称"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功启动"
+          },
+          "example": "app.launchApp('微信');"
+        },
+        {
+          "name": "app.launch",
+          "description": "通过包名启动应用",
+          "params": [
+            {
+              "name": "packageName",
+              "type": "string",
+              "required": true,
+              "description": "应用包名"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功启动"
+          },
+          "example": "app.launch('com.tencent.mm');"
+        },
+        {
+          "name": "app.getPackageName",
+          "description": "获取应用名称对应的包名",
+          "params": [
+            {
+              "name": "appName",
+              "type": "string",
+              "required": true,
+              "description": "应用名称"
+            }
+          ],
+          "returns": {
+            "type": "string",
+            "description": "应用包名，未找到返回 null"
+          },
+          "example": "var pkg = app.getPackageName('微信'); // 'com.tencent.mm'"
+        },
+        {
+          "name": "app.getAppName",
+          "description": "获取包名对应的应用名称",
+          "params": [
+            {
+              "name": "packageName",
+              "type": "string",
+              "required": true,
+              "description": "应用包名"
+            }
+          ],
+          "returns": {
+            "type": "string",
+            "description": "应用名称，未找到返回 null"
+          },
+          "example": "var name = app.getAppName('com.tencent.mm'); // '微信'"
+        },
+        {
+          "name": "app.openAppSetting",
+          "description": "打开应用的详情页（设置页）",
+          "params": [
+            {
+              "name": "packageName",
+              "type": "string",
+              "required": true,
+              "description": "应用包名"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功打开"
+          },
+          "example": "app.openAppSetting('com.tencent.mm');"
+        },
+        {
+          "name": "app.viewFile",
+          "description": "用其他应用查看文件",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功打开"
+          },
+          "example": "app.viewFile('/sdcard/1.png');"
+        },
+        {
+          "name": "app.editFile",
+          "description": "用其他应用编辑文件",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功打开"
+          },
+          "example": "app.editFile('/sdcard/1.txt');"
+        },
+        {
+          "name": "app.uninstall",
+          "description": "卸载应用",
+          "params": [
+            {
+              "name": "packageName",
+              "type": "string",
+              "required": true,
+              "description": "应用包名"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功启动卸载界面"
+          },
+          "example": "app.uninstall('com.example.app');"
+        },
+        {
+          "name": "app.openUrl",
+          "description": "用浏览器打开网址",
+          "params": [
+            {
+              "name": "url",
+              "type": "string",
+              "required": true,
+              "description": "网址"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功打开"
+          },
+          "example": "app.openUrl('https://www.baidu.com');"
+        },
+        {
+          "name": "app.sendEmail",
+          "description": "发送邮件",
+          "params": [
+            {
+              "name": "options",
+              "type": "object",
+              "required": true,
+              "description": "邮件选项",
+              "properties": {
+                "email": "收件人邮箱地址（数组或字符串）",
+                "cc": "抄送地址（数组或字符串）",
+                "bcc": "密送地址（数组或字符串）",
+                "subject": "邮件主题",
+                "text": "邮件正文"
+              }
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功启动邮件应用"
+          },
+          "example": "app.sendEmail({email: 'test@example.com', subject: '测试', text: '内容'});"
+        },
+        {
+          "name": "app.startActivity",
+          "description": "启动 Activity",
+          "params": [
+            {
+              "name": "options",
+              "type": "object",
+              "required": true,
+              "description": "Activity 选项",
+              "properties": {
+                "action": "Intent action",
+                "packageName": "包名",
+                "className": "类名",
+                "data": "Intent data URI",
+                "type": "MIME 类型",
+                "extras": "额外数据对象"
+              }
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "app.startActivity({action: 'android.intent.action.VIEW', data: 'https://www.baidu.com'});"
+        }
+      ]
+    },
+    {
+      "id": "console",
+      "name": "console",
+      "title": "控制台",
+      "description": "提供日志输出、调试信息显示等功能",
+      "apis": [
+        {
+          "name": "console.show",
+          "description": "显示控制台",
+          "params": [],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.show();"
+        },
+        {
+          "name": "console.hide",
+          "description": "隐藏控制台",
+          "params": [],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.hide();"
+        },
+        {
+          "name": "console.clear",
+          "description": "清空控制台",
+          "params": [],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.clear();"
+        },
+        {
+          "name": "console.log",
+          "description": "打印日志信息",
+          "params": [
+            {
+              "name": "data",
+              "type": "any",
+              "required": true,
+              "description": "要输出的数据，可以是多个参数"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.log('Hello', 'World', 123);"
+        },
+        {
+          "name": "console.verbose",
+          "description": "打印详细信息",
+          "params": [
+            {
+              "name": "data",
+              "type": "any",
+              "required": true,
+              "description": "要输出的数据"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.verbose('详细信息');"
+        },
+        {
+          "name": "console.info",
+          "description": "打印信息",
+          "params": [
+            {
+              "name": "data",
+              "type": "any",
+              "required": true,
+              "description": "要输出的数据"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.info('提示信息');"
+        },
+        {
+          "name": "console.warn",
+          "description": "打印警告信息",
+          "params": [
+            {
+              "name": "data",
+              "type": "any",
+              "required": true,
+              "description": "要输出的数据"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.warn('警告信息');"
+        },
+        {
+          "name": "console.error",
+          "description": "打印错误信息",
+          "params": [
+            {
+              "name": "data",
+              "type": "any",
+              "required": true,
+              "description": "要输出的数据"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.error('错误信息');"
+        },
+        {
+          "name": "console.assert",
+          "description": "断言，条件为 false 时输出错误信息",
+          "params": [
+            {
+              "name": "value",
+              "type": "boolean",
+              "required": true,
+              "description": "断言条件"
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "required": false,
+              "description": "错误信息"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.assert(1 + 1 === 2, '数学错误');"
+        },
+        {
+          "name": "console.time",
+          "description": "启动一个计时器",
+          "params": [
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "default": "default",
+              "description": "计时器标签"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.time('test');"
+        },
+        {
+          "name": "console.timeEnd",
+          "description": "停止计时器并输出耗时",
+          "params": [
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "default": "default",
+              "description": "计时器标签"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.timeEnd('test');"
+        },
+        {
+          "name": "console.trace",
+          "description": "打印当前的调用栈",
+          "params": [
+            {
+              "name": "data",
+              "type": "any",
+              "required": false,
+              "description": "附加信息"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.trace('追踪信息');"
+        },
+        {
+          "name": "console.input",
+          "description": "弹出输入框并返回输入内容",
+          "params": [
+            {
+              "name": "data",
+              "type": "any",
+              "required": false,
+              "description": "提示信息"
+            }
+          ],
+          "returns": {
+            "type": "string",
+            "description": "用户输入的内容"
+          },
+          "example": "var input = console.input('请输入内容');"
+        },
+        {
+          "name": "console.rawInput",
+          "description": "弹出输入框并返回输入内容（不进行 eval）",
+          "params": [
+            {
+              "name": "data",
+              "type": "any",
+              "required": false,
+              "description": "提示信息"
+            }
+          ],
+          "returns": {
+            "type": "string",
+            "description": "用户输入的原始内容"
+          },
+          "example": "var input = console.rawInput('请输入内容');"
+        },
+        {
+          "name": "console.setSize",
+          "description": "设置控制台大小",
+          "params": [
+            {
+              "name": "w",
+              "type": "number",
+              "required": true,
+              "description": "宽度（像素）"
+            },
+            {
+              "name": "h",
+              "type": "number",
+              "required": true,
+              "description": "高度（像素）"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.setSize(800, 400);"
+        },
+        {
+          "name": "console.setPosition",
+          "description": "设置控制台位置",
+          "params": [
+            {
+              "name": "x",
+              "type": "number",
+              "required": true,
+              "description": "X 坐标（像素）"
+            },
+            {
+              "name": "y",
+              "type": "number",
+              "required": true,
+              "description": "Y 坐标（像素）"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "console.setPosition(100, 100);"
+        }
+      ]
+    },
+    {
+      "id": "device",
+      "name": "device",
+      "title": "设备",
+      "description": "提供设备信息获取和设备控制功能",
+      "apis": [
+        {
+          "name": "device.width",
+          "description": "设备屏幕分辨率宽度（像素）",
+          "type": "property",
+          "returns": {
+            "type": "number"
+          },
+          "example": "var w = device.width;"
+        },
+        {
+          "name": "device.height",
+          "description": "设备屏幕分辨率高度（像素）",
+          "type": "property",
+          "returns": {
+            "type": "number"
+          },
+          "example": "var h = device.height;"
+        },
+        {
+          "name": "device.buildId",
+          "description": "Build ID",
+          "type": "property",
+          "returns": {
+            "type": "string"
+          },
+          "example": "var id = device.buildId;"
+        },
+        {
+          "name": "device.brand",
+          "description": "设备品牌",
+          "type": "property",
+          "returns": {
+            "type": "string"
+          },
+          "example": "var brand = device.brand; // 'Xiaomi'"
+        },
+        {
+          "name": "device.model",
+          "description": "设备型号",
+          "type": "property",
+          "returns": {
+            "type": "string"
+          },
+          "example": "var model = device.model; // 'MI 8'"
+        },
+        {
+          "name": "device.product",
+          "description": "设备产品名称",
+          "type": "property",
+          "returns": {
+            "type": "string"
+          },
+          "example": "var product = device.product;"
+        },
+        {
+          "name": "device.release",
+          "description": "Android 系统版本号",
+          "type": "property",
+          "returns": {
+            "type": "string"
+          },
+          "example": "var release = device.release; // '10'"
+        },
+        {
+          "name": "device.sdkInt",
+          "description": "Android SDK 版本号",
+          "type": "property",
+          "returns": {
+            "type": "number"
+          },
+          "example": "var sdk = device.sdkInt; // 29"
+        },
+        {
+          "name": "device.incremental",
+          "description": "Android 增量版本号",
+          "type": "property",
+          "returns": {
+            "type": "string"
+          },
+          "example": "var inc = device.incremental;"
+        },
+        {
+          "name": "device.serial",
+          "description": "设备序列号",
+          "type": "property",
+          "returns": {
+            "type": "string"
+          },
+          "example": "var serial = device.serial;"
+        },
+        {
+          "name": "device.fingerprint",
+          "description": "设备指纹",
+          "type": "property",
+          "returns": {
+            "type": "string"
+          },
+          "example": "var fp = device.fingerprint;"
+        },
+        {
+          "name": "device.getIMEI",
+          "description": "获取设备 IMEI",
+          "params": [],
+          "returns": {
+            "type": "string",
+            "description": "IMEI 号"
+          },
+          "example": "var imei = device.getIMEI();"
+        },
+        {
+          "name": "device.getAndroidId",
+          "description": "获取 Android ID",
+          "params": [],
+          "returns": {
+            "type": "string",
+            "description": "Android ID"
+          },
+          "example": "var id = device.getAndroidId();"
+        },
+        {
+          "name": "device.getMacAddress",
+          "description": "获取 MAC 地址",
+          "params": [],
+          "returns": {
+            "type": "string",
+            "description": "MAC 地址"
+          },
+          "example": "var mac = device.getMacAddress();"
+        },
+        {
+          "name": "device.getBrightness",
+          "description": "获取当前亮度（0-255）",
+          "params": [],
+          "returns": {
+            "type": "number",
+            "description": "亮度值"
+          },
+          "example": "var brightness = device.getBrightness();"
+        },
+        {
+          "name": "device.getBrightnessMode",
+          "description": "获取亮度模式",
+          "params": [],
+          "returns": {
+            "type": "number",
+            "description": "0 为手动，1 为自动"
+          },
+          "example": "var mode = device.getBrightnessMode();"
+        },
+        {
+          "name": "device.setBrightness",
+          "description": "设置亮度",
+          "params": [
+            {
+              "name": "brightness",
+              "type": "number",
+              "required": true,
+              "description": "亮度值（0-255）"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.setBrightness(100);"
+        },
+        {
+          "name": "device.setBrightnessMode",
+          "description": "设置亮度模式",
+          "params": [
+            {
+              "name": "mode",
+              "type": "number",
+              "required": true,
+              "description": "0 为手动，1 为自动"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.setBrightnessMode(0);"
+        },
+        {
+          "name": "device.getMusicVolume",
+          "description": "获取媒体音量",
+          "params": [],
+          "returns": {
+            "type": "number"
+          },
+          "example": "var vol = device.getMusicVolume();"
+        },
+        {
+          "name": "device.getNotificationVolume",
+          "description": "获取通知音量",
+          "params": [],
+          "returns": {
+            "type": "number"
+          },
+          "example": "var vol = device.getNotificationVolume();"
+        },
+        {
+          "name": "device.getAlarmVolume",
+          "description": "获取闹钟音量",
+          "params": [],
+          "returns": {
+            "type": "number"
+          },
+          "example": "var vol = device.getAlarmVolume();"
+        },
+        {
+          "name": "device.getMusicMaxVolume",
+          "description": "获取媒体最大音量",
+          "params": [],
+          "returns": {
+            "type": "number"
+          },
+          "example": "var max = device.getMusicMaxVolume();"
+        },
+        {
+          "name": "device.getNotificationMaxVolume",
+          "description": "获取通知最大音量",
+          "params": [],
+          "returns": {
+            "type": "number"
+          },
+          "example": "var max = device.getNotificationMaxVolume();"
+        },
+        {
+          "name": "device.getAlarmMaxVolume",
+          "description": "获取闹钟最大音量",
+          "params": [],
+          "returns": {
+            "type": "number"
+          },
+          "example": "var max = device.getAlarmMaxVolume();"
+        },
+        {
+          "name": "device.setMusicVolume",
+          "description": "设置媒体音量",
+          "params": [
+            {
+              "name": "volume",
+              "type": "number",
+              "required": true,
+              "description": "音量值"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.setMusicVolume(10);"
+        },
+        {
+          "name": "device.setNotificationVolume",
+          "description": "设置通知音量",
+          "params": [
+            {
+              "name": "volume",
+              "type": "number",
+              "required": true,
+              "description": "音量值"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.setNotificationVolume(5);"
+        },
+        {
+          "name": "device.setAlarmVolume",
+          "description": "设置闹钟音量",
+          "params": [
+            {
+              "name": "volume",
+              "type": "number",
+              "required": true,
+              "description": "音量值"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.setAlarmVolume(8);"
+        },
+        {
+          "name": "device.getBattery",
+          "description": "获取电池电量（0-100）",
+          "params": [],
+          "returns": {
+            "type": "number"
+          },
+          "example": "var battery = device.getBattery();"
+        },
+        {
+          "name": "device.isCharging",
+          "description": "是否正在充电",
+          "params": [],
+          "returns": {
+            "type": "boolean"
+          },
+          "example": "var charging = device.isCharging();"
+        },
+        {
+          "name": "device.getTotalMem",
+          "description": "获取设备总内存（字节）",
+          "params": [],
+          "returns": {
+            "type": "number"
+          },
+          "example": "var total = device.getTotalMem();"
+        },
+        {
+          "name": "device.getAvailMem",
+          "description": "获取设备可用内存（字节）",
+          "params": [],
+          "returns": {
+            "type": "number"
+          },
+          "example": "var avail = device.getAvailMem();"
+        },
+        {
+          "name": "device.isScreenOn",
+          "description": "屏幕是否亮起",
+          "params": [],
+          "returns": {
+            "type": "boolean"
+          },
+          "example": "var on = device.isScreenOn();"
+        },
+        {
+          "name": "device.wakeUp",
+          "description": "唤醒设备",
+          "params": [],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.wakeUp();"
+        },
+        {
+          "name": "device.wakeUpIfNeeded",
+          "description": "如果屏幕未亮则唤醒设备",
+          "params": [],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.wakeUpIfNeeded();"
+        },
+        {
+          "name": "device.keepScreenOn",
+          "description": "保持屏幕常亮",
+          "params": [
+            {
+              "name": "timeout",
+              "type": "number",
+              "required": false,
+              "description": "超时时间（毫秒），不指定则一直保持"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.keepScreenOn(60000);"
+        },
+        {
+          "name": "device.keepScreenDim",
+          "description": "保持屏幕常亮但允许变暗",
+          "params": [
+            {
+              "name": "timeout",
+              "type": "number",
+              "required": false,
+              "description": "超时时间（毫秒）"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.keepScreenDim();"
+        },
+        {
+          "name": "device.cancelKeepingAwake",
+          "description": "取消保持屏幕常亮",
+          "params": [],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.cancelKeepingAwake();"
+        },
+        {
+          "name": "device.vibrate",
+          "description": "震动",
+          "params": [
+            {
+              "name": "milliseconds",
+              "type": "number",
+              "required": true,
+              "description": "震动时长（毫秒）"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.vibrate(500);"
+        },
+        {
+          "name": "device.cancelVibration",
+          "description": "取消震动",
+          "params": [],
+          "returns": {
+            "type": "void"
+          },
+          "example": "device.cancelVibration();"
+        }
+      ]
+    },
+    {
+      "id": "dialogs",
+      "name": "dialogs",
+      "title": "对话框",
+      "description": "提供各种对话框功能，用于与用户交互",
+      "apis": [
+        {
+          "name": "dialogs.alert",
+          "description": "显示提示对话框",
+          "params": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "对话框标题"
+            },
+            {
+              "name": "content",
+              "type": "string",
+              "required": false,
+              "description": "对话框内容"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "dialogs.alert('提示', '这是一个提示框');"
+        },
+        {
+          "name": "dialogs.confirm",
+          "description": "显示确认对话框",
+          "params": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "对话框标题"
+            },
+            {
+              "name": "content",
+              "type": "string",
+              "required": false,
+              "description": "对话框内容"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数，参数为 boolean"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "用户是否点击确定"
+          },
+          "example": "var result = dialogs.confirm('确认', '确定要继续吗？');"
+        },
+        {
+          "name": "dialogs.rawInput",
+          "description": "显示输入对话框",
+          "params": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "对话框标题"
+            },
+            {
+              "name": "prefill",
+              "type": "string",
+              "required": false,
+              "description": "输入框默认值"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "string",
+            "description": "用户输入的内容，取消返回 null"
+          },
+          "example": "var input = dialogs.rawInput('请输入', '默认值');"
+        },
+        {
+          "name": "dialogs.input",
+          "description": "显示输入对话框（会对输入进行 eval）",
+          "params": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "对话框标题"
+            },
+            {
+              "name": "prefill",
+              "type": "string",
+              "required": false,
+              "description": "输入框默认值"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "any",
+            "description": "用户输入的内容（经过 eval）"
+          },
+          "example": "var num = dialogs.input('请输入数字', '123');"
+        },
+        {
+          "name": "dialogs.prompt",
+          "description": "显示输入对话框（同 rawInput）",
+          "params": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "对话框标题"
+            },
+            {
+              "name": "prefill",
+              "type": "string",
+              "required": false,
+              "description": "输入框默认值"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "string",
+            "description": "用户输入的内容"
+          },
+          "example": "var input = dialogs.prompt('请输入');"
+        },
+        {
+          "name": "dialogs.select",
+          "description": "显示单选列表对话框",
+          "params": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "对话框标题"
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "description": "选项数组"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数，参数为选中项的索引"
+            }
+          ],
+          "returns": {
+            "type": "number",
+            "description": "选中项的索引，取消返回 -1"
+          },
+          "example": "var index = dialogs.select('选择', ['选项1', '选项2', '选项3']);"
+        },
+        {
+          "name": "dialogs.singleChoice",
+          "description": "显示单选对话框",
+          "params": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "对话框标题"
+            },
+            {
+              "name": "index",
+              "type": "number",
+              "required": true,
+              "description": "默认选中项索引"
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "description": "选项数组"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "number",
+            "description": "选中项的索引"
+          },
+          "example": "var index = dialogs.singleChoice('选择', 0, ['选项1', '选项2']);"
+        },
+        {
+          "name": "dialogs.multiChoice",
+          "description": "显示多选对话框",
+          "params": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "对话框标题"
+            },
+            {
+              "name": "indices",
+              "type": "array",
+              "required": true,
+              "description": "默认选中项索引数组"
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "description": "选项数组"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "array",
+            "description": "选中项的索引数组"
+          },
+          "example": "var indices = dialogs.multiChoice('选择', [0], ['选项1', '选项2', '选项3']);"
+        },
+        {
+          "name": "dialogs.build",
+          "description": "创建自定义对话框",
+          "params": [
+            {
+              "name": "properties",
+              "type": "object",
+              "required": true,
+              "description": "对话框属性对象"
+            }
+          ],
+          "returns": {
+            "type": "Dialog",
+            "description": "对话框对象"
+          },
+          "example": "var dialog = dialogs.build({title: '标题', content: '内容', positive: '确定'}).show();"
+        }
+      ]
+    },
+    {
+      "id": "files",
+      "name": "files",
+      "title": "文件系统",
+      "description": "提供文件和目录操作功能",
+      "apis": [
+        {
+          "name": "files.isFile",
+          "description": "判断路径是否为文件",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean"
+          },
+          "example": "var isFile = files.isFile('/sdcard/test.txt');"
+        },
+        {
+          "name": "files.isDir",
+          "description": "判断路径是否为目录",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "目录路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean"
+          },
+          "example": "var isDir = files.isDir('/sdcard/test');"
+        },
+        {
+          "name": "files.isEmptyDir",
+          "description": "判断目录是否为空",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "目录路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean"
+          },
+          "example": "var isEmpty = files.isEmptyDir('/sdcard/test');"
+        },
+        {
+          "name": "files.join",
+          "description": "连接路径",
+          "params": [
+            {
+              "name": "parent",
+              "type": "string",
+              "required": true,
+              "description": "父路径"
+            },
+            {
+              "name": "child",
+              "type": "string",
+              "required": true,
+              "description": "子路径"
+            }
+          ],
+          "returns": {
+            "type": "string",
+            "description": "连接后的路径"
+          },
+          "example": "var path = files.join('/sdcard', 'test.txt'); // '/sdcard/test.txt'"
+        },
+        {
+          "name": "files.create",
+          "description": "创建文件（如果不存在）",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否创建成功"
+          },
+          "example": "files.create('/sdcard/test.txt');"
+        },
+        {
+          "name": "files.createWithDirs",
+          "description": "创建文件及其父目录",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否创建成功"
+          },
+          "example": "files.createWithDirs('/sdcard/a/b/test.txt');"
+        },
+        {
+          "name": "files.exists",
+          "description": "判断文件或目录是否存在",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean"
+          },
+          "example": "var exists = files.exists('/sdcard/test.txt');"
+        },
+        {
+          "name": "files.ensureDir",
+          "description": "确保目录存在，不存在则创建",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "目录路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean"
+          },
+          "example": "files.ensureDir('/sdcard/test');"
+        },
+        {
+          "name": "files.read",
+          "description": "读取文件内容",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            },
+            {
+              "name": "encoding",
+              "type": "string",
+              "required": false,
+              "default": "utf-8",
+              "description": "编码格式"
+            }
+          ],
+          "returns": {
+            "type": "string",
+            "description": "文件内容"
+          },
+          "example": "var content = files.read('/sdcard/test.txt');"
+        },
+        {
+          "name": "files.readBytes",
+          "description": "读取文件字节数组",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            }
+          ],
+          "returns": {
+            "type": "byte[]",
+            "description": "字节数组"
+          },
+          "example": "var bytes = files.readBytes('/sdcard/test.bin');"
+        },
+        {
+          "name": "files.write",
+          "description": "写入文件内容（覆盖）",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            },
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "description": "要写入的内容"
+            },
+            {
+              "name": "encoding",
+              "type": "string",
+              "required": false,
+              "default": "utf-8",
+              "description": "编码格式"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "files.write('/sdcard/test.txt', 'Hello World');"
+        },
+        {
+          "name": "files.writeBytes",
+          "description": "写入字节数组到文件",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            },
+            {
+              "name": "bytes",
+              "type": "byte[]",
+              "required": true,
+              "description": "字节数组"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "files.writeBytes('/sdcard/test.bin', bytes);"
+        },
+        {
+          "name": "files.append",
+          "description": "追加内容到文件",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            },
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "description": "要追加的内容"
+            },
+            {
+              "name": "encoding",
+              "type": "string",
+              "required": false,
+              "default": "utf-8",
+              "description": "编码格式"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "files.append('/sdcard/test.txt', '\\nNew Line');"
+        },
+        {
+          "name": "files.appendBytes",
+          "description": "追加字节数组到文件",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            },
+            {
+              "name": "bytes",
+              "type": "byte[]",
+              "required": true,
+              "description": "字节数组"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "files.appendBytes('/sdcard/test.bin', bytes);"
+        },
+        {
+          "name": "files.copy",
+          "description": "复制文件或目录",
+          "params": [
+            {
+              "name": "fromPath",
+              "type": "string",
+              "required": true,
+              "description": "源路径"
+            },
+            {
+              "name": "toPath",
+              "type": "string",
+              "required": true,
+              "description": "目标路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否复制成功"
+          },
+          "example": "files.copy('/sdcard/test.txt', '/sdcard/test2.txt');"
+        },
+        {
+          "name": "files.move",
+          "description": "移动文件或目录",
+          "params": [
+            {
+              "name": "fromPath",
+              "type": "string",
+              "required": true,
+              "description": "源路径"
+            },
+            {
+              "name": "toPath",
+              "type": "string",
+              "required": true,
+              "description": "目标路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否移动成功"
+          },
+          "example": "files.move('/sdcard/test.txt', '/sdcard/test2.txt');"
+        },
+        {
+          "name": "files.rename",
+          "description": "重命名文件或目录",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            },
+            {
+              "name": "newName",
+              "type": "string",
+              "required": true,
+              "description": "新名称"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否重命名成功"
+          },
+          "example": "files.rename('/sdcard/test.txt', 'test2.txt');"
+        },
+        {
+          "name": "files.renameWithoutExtension",
+          "description": "重命名文件（不改变扩展名）",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "文件路径"
+            },
+            {
+              "name": "newName",
+              "type": "string",
+              "required": true,
+              "description": "新名称（不含扩展名）"
+            }
+          ],
+          "returns": {
+            "type": "boolean"
+          },
+          "example": "files.renameWithoutExtension('/sdcard/test.txt', 'test2');"
+        },
+        {
+          "name": "files.remove",
+          "description": "删除文件或目录",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否删除成功"
+          },
+          "example": "files.remove('/sdcard/test.txt');"
+        },
+        {
+          "name": "files.removeDir",
+          "description": "删除目录（包括内容）",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "目录路径"
+            }
+          ],
+          "returns": {
+            "type": "boolean"
+          },
+          "example": "files.removeDir('/sdcard/test');"
+        },
+        {
+          "name": "files.getSdcardPath",
+          "description": "获取 SD 卡路径",
+          "params": [],
+          "returns": {
+            "type": "string"
+          },
+          "example": "var sdcard = files.getSdcardPath();"
+        },
+        {
+          "name": "files.cwd",
+          "description": "获取当前工作目录",
+          "params": [],
+          "returns": {
+            "type": "string"
+          },
+          "example": "var cwd = files.cwd();"
+        },
+        {
+          "name": "files.path",
+          "description": "获取相对于当前工作目录的绝对路径",
+          "params": [
+            {
+              "name": "relativePath",
+              "type": "string",
+              "required": true,
+              "description": "相对路径"
+            }
+          ],
+          "returns": {
+            "type": "string"
+          },
+          "example": "var absPath = files.path('./test.txt');"
+        },
+        {
+          "name": "files.listDir",
+          "description": "列出目录下的文件和子目录",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "目录路径"
+            },
+            {
+              "name": "filter",
+              "type": "function",
+              "required": false,
+              "description": "过滤函数"
+            }
+          ],
+          "returns": {
+            "type": "array",
+            "description": "文件名数组"
+          },
+          "example": "var list = files.listDir('/sdcard');"
+        }
+      ]
+    },
+    {
+      "id": "globals",
+      "name": "globals",
+      "title": "全局变量与函数",
+      "description": "全局变量和函数在所有模块中均可使用",
+      "apis": [
+        {
+          "name": "sleep",
+          "description": "暂停脚本执行",
+          "params": [
+            {
+              "name": "n",
+              "type": "number",
+              "required": true,
+              "description": "暂停时间（毫秒）"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "sleep(1000); // 暂停1秒"
+        },
+        {
+          "name": "currentPackage",
+          "description": "获取当前前台应用的包名",
+          "params": [],
+          "returns": {
+            "type": "string",
+            "description": "当前前台应用包名"
+          },
+          "example": "var pkg = currentPackage();"
+        },
+        {
+          "name": "currentActivity",
+          "description": "获取当前前台 Activity 名称",
+          "params": [],
+          "returns": {
+            "type": "string",
+            "description": "当前 Activity 名称"
+          },
+          "example": "var act = currentActivity();"
+        },
+        {
+          "name": "setClip",
+          "description": "设置剪贴板内容",
+          "params": [
+            {
+              "name": "text",
+              "type": "string",
+              "required": true,
+              "description": "要设置的文本"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "setClip('Hello World');"
+        },
+        {
+          "name": "getClip",
+          "description": "获取剪贴板内容",
+          "params": [],
+          "returns": {
+            "type": "string",
+            "description": "剪贴板文本"
+          },
+          "example": "var text = getClip();"
+        },
+        {
+          "name": "toast",
+          "description": "显示 Toast 提示",
+          "params": [
+            {
+              "name": "message",
+              "type": "string",
+              "required": true,
+              "description": "提示内容"
+            },
+            {
+              "name": "isLong",
+              "type": "boolean",
+              "required": false,
+              "default": false,
+              "description": "是否显示长时间"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "toast('操作成功');"
+        },
+        {
+          "name": "toastLog",
+          "description": "显示 Toast 并同时输出到控制台",
+          "params": [
+            {
+              "name": "message",
+              "type": "string",
+              "required": true,
+              "description": "提示内容"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "toastLog('操作成功');"
+        },
+        {
+          "name": "waitForActivity",
+          "description": "等待指定 Activity 出现",
+          "params": [
+            {
+              "name": "activity",
+              "type": "string",
+              "required": true,
+              "description": "Activity 名称"
+            },
+            {
+              "name": "period",
+              "type": "number",
+              "required": false,
+              "default": 200,
+              "description": "检查间隔（毫秒）"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "waitForActivity('com.example.MainActivity');"
+        },
+        {
+          "name": "waitForPackage",
+          "description": "等待指定应用出现",
+          "params": [
+            {
+              "name": "packageName",
+              "type": "string",
+              "required": true,
+              "description": "应用包名"
+            },
+            {
+              "name": "period",
+              "type": "number",
+              "required": false,
+              "default": 200,
+              "description": "检查间隔（毫秒）"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "waitForPackage('com.tencent.mm');"
+        },
+        {
+          "name": "exit",
+          "description": "停止脚本运行",
+          "params": [],
+          "returns": {
+            "type": "void"
+          },
+          "example": "exit();"
+        },
+        {
+          "name": "random",
+          "description": "生成随机数",
+          "params": [
+            {
+              "name": "min",
+              "type": "number",
+              "required": false,
+              "description": "最小值（含）"
+            },
+            {
+              "name": "max",
+              "type": "number",
+              "required": false,
+              "description": "最大值（含）"
+            }
+          ],
+          "returns": {
+            "type": "number",
+            "description": "随机整数（有参数时）或 0-1 的随机浮点数（无参数时）"
+          },
+          "example": "var n = random(1, 10);"
+        },
+        {
+          "name": "requiresApi",
+          "description": "要求最低 Android API 版本",
+          "params": [
+            {
+              "name": "api",
+              "type": "number",
+              "required": true,
+              "description": "最低 API 版本"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "requiresApi(21);"
+        },
+        {
+          "name": "requiresAutojsVersion",
+          "description": "要求最低 AutoX.js 版本",
+          "params": [
+            {
+              "name": "version",
+              "type": "string",
+              "required": true,
+              "description": "版本号"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "requiresAutojsVersion('3.0.0 Beta');"
+        },
+        {
+          "name": "runtime.requestPermissions",
+          "description": "动态申请权限",
+          "params": [
+            {
+              "name": "permissions",
+              "type": "array",
+              "required": true,
+              "description": "权限数组"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "runtime.requestPermissions(['android.permission.READ_CONTACTS']);"
+        },
+        {
+          "name": "runtime.loadJar",
+          "description": "加载 JAR 文件",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "JAR 文件路径"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "runtime.loadJar('/sdcard/test.jar');"
+        },
+        {
+          "name": "runtime.loadDex",
+          "description": "加载 DEX 文件",
+          "params": [
+            {
+              "name": "path",
+              "type": "string",
+              "required": true,
+              "description": "DEX 文件路径"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "runtime.loadDex('/sdcard/test.dex');"
+        },
+        {
+          "name": "context",
+          "type": "property",
+          "description": "当前应用的 Context 对象",
+          "returns": {
+            "type": "android.content.Context"
+          },
+          "example": "var ctx = context;"
+        }
+      ]
+    },
+    {
+      "id": "http",
+      "name": "http",
+      "title": "HTTP 网络请求",
+      "description": "提供 HTTP 请求功能",
+      "apis": [
+        {
+          "name": "http.get",
+          "description": "发送 GET 请求",
+          "params": [
+            {
+              "name": "url",
+              "type": "string",
+              "required": true,
+              "description": "请求 URL"
+            },
+            {
+              "name": "options",
+              "type": "object",
+              "required": false,
+              "description": "请求选项（headers 等）"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "Response",
+            "description": "响应对象"
+          },
+          "example": "var res = http.get('https://api.example.com/data');\nconsole.log(res.body.string());"
+        },
+        {
+          "name": "http.post",
+          "description": "发送 POST 请求",
+          "params": [
+            {
+              "name": "url",
+              "type": "string",
+              "required": true,
+              "description": "请求 URL"
+            },
+            {
+              "name": "data",
+              "type": "object|string",
+              "required": true,
+              "description": "请求体数据"
+            },
+            {
+              "name": "options",
+              "type": "object",
+              "required": false,
+              "description": "请求选项"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "Response",
+            "description": "响应对象"
+          },
+          "example": "var res = http.post('https://api.example.com/login', {username: 'test', password: '123'});"
+        },
+        {
+          "name": "http.postJson",
+          "description": "发送 JSON POST 请求",
+          "params": [
+            {
+              "name": "url",
+              "type": "string",
+              "required": true,
+              "description": "请求 URL"
+            },
+            {
+              "name": "data",
+              "type": "object",
+              "required": true,
+              "description": "JSON 数据"
+            },
+            {
+              "name": "options",
+              "type": "object",
+              "required": false,
+              "description": "请求选项"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "Response",
+            "description": "响应对象"
+          },
+          "example": "var res = http.postJson('https://api.example.com/data', {key: 'value'});"
+        },
+        {
+          "name": "http.postMultipart",
+          "description": "发送 multipart/form-data POST 请求（文件上传）",
+          "params": [
+            {
+              "name": "url",
+              "type": "string",
+              "required": true,
+              "description": "请求 URL"
+            },
+            {
+              "name": "files",
+              "type": "object",
+              "required": true,
+              "description": "文件和字段数据"
+            },
+            {
+              "name": "options",
+              "type": "object",
+              "required": false,
+              "description": "请求选项"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "Response",
+            "description": "响应对象"
+          },
+          "example": "var res = http.postMultipart('https://api.example.com/upload', {file: open('/sdcard/test.jpg')});"
+        },
+        {
+          "name": "http.request",
+          "description": "发送自定义 HTTP 请求",
+          "params": [
+            {
+              "name": "url",
+              "type": "string",
+              "required": true,
+              "description": "请求 URL"
+            },
+            {
+              "name": "options",
+              "type": "object",
+              "required": true,
+              "description": "请求选项（method, headers, body 等）"
+            },
+            {
+              "name": "callback",
+              "type": "function",
+              "required": false,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "Response",
+            "description": "响应对象"
+          },
+          "example": "var res = http.request('https://api.example.com', {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({key: 'value'})});"
+        }
+      ],
+      "types": {
+        "Response": {
+          "description": "HTTP 响应对象",
+          "properties": {
+            "statusCode": "HTTP 状态码（number）",
+            "statusMessage": "HTTP 状态消息（string）",
+            "headers": "响应头（object）",
+            "body": "响应体（ResponseBody）",
+            "request": "请求对象（Request）",
+            "url": "请求 URL（string）"
+          }
+        },
+        "ResponseBody": {
+          "description": "HTTP 响应体对象",
+          "methods": {
+            "string()": "以字符串形式返回响应体",
+            "json()": "以 JSON 对象形式返回响应体",
+            "bytes()": "以字节数组形式返回响应体"
+          }
+        }
+      }
+    },
+    {
+      "id": "coordinates",
+      "name": "coordinatesBasedAutomation",
+      "title": "基于坐标的触摸模拟",
+      "description": "提供基于坐标的点击、滑动等触摸操作",
+      "requirements": [
+        "Android 7.0+ 或 root 权限"
+      ],
+      "apis": [
+        {
+          "name": "click",
+          "description": "点击指定坐标",
+          "params": [
+            {
+              "name": "x",
+              "type": "number",
+              "required": true,
+              "description": "X 坐标"
+            },
+            {
+              "name": "y",
+              "type": "number",
+              "required": true,
+              "description": "Y 坐标"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "click(100, 200);"
+        },
+        {
+          "name": "longClick",
+          "description": "长按指定坐标",
+          "params": [
+            {
+              "name": "x",
+              "type": "number",
+              "required": true,
+              "description": "X 坐标"
+            },
+            {
+              "name": "y",
+              "type": "number",
+              "required": true,
+              "description": "Y 坐标"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "longClick(100, 200);"
+        },
+        {
+          "name": "press",
+          "description": "按住指定坐标",
+          "params": [
+            {
+              "name": "x",
+              "type": "number",
+              "required": true,
+              "description": "X 坐标"
+            },
+            {
+              "name": "y",
+              "type": "number",
+              "required": true,
+              "description": "Y 坐标"
+            },
+            {
+              "name": "duration",
+              "type": "number",
+              "required": true,
+              "description": "按住时长（毫秒）"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "press(100, 200, 1000);"
+        },
+        {
+          "name": "swipe",
+          "description": "滑动",
+          "params": [
+            {
+              "name": "x1",
+              "type": "number",
+              "required": true,
+              "description": "起点 X 坐标"
+            },
+            {
+              "name": "y1",
+              "type": "number",
+              "required": true,
+              "description": "起点 Y 坐标"
+            },
+            {
+              "name": "x2",
+              "type": "number",
+              "required": true,
+              "description": "终点 X 坐标"
+            },
+            {
+              "name": "y2",
+              "type": "number",
+              "required": true,
+              "description": "终点 Y 坐标"
+            },
+            {
+              "name": "duration",
+              "type": "number",
+              "required": false,
+              "default": 300,
+              "description": "滑动时长（毫秒）"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "swipe(100, 500, 100, 200, 500);"
+        },
+        {
+          "name": "gesture",
+          "description": "执行手势",
+          "params": [
+            {
+              "name": "duration",
+              "type": "number",
+              "required": true,
+              "description": "手势时长（毫秒）"
+            },
+            {
+              "name": "points",
+              "type": "array",
+              "required": true,
+              "description": "手势路径点数组 [[x1,y1], [x2,y2], ...]"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "gesture(1000, [100, 200], [200, 300], [300, 200]);"
+        },
+        {
+          "name": "gestures",
+          "description": "同时执行多个手势（多点触控）",
+          "params": [
+            {
+              "name": "gestures",
+              "type": "array",
+              "required": true,
+              "description": "手势数组，每个手势为 [duration, [x1,y1], [x2,y2], ...]"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "gestures([1000, [100, 200], [200, 300]], [1000, [300, 400], [400, 500]]);"
+        }
+      ]
+    },
+    {
+      "id": "widgets",
+      "name": "widgetsBasedAutomation",
+      "title": "基于控件的操作",
+      "description": "提供基于控件的查找和操作功能",
+      "requirements": [
+        "无障碍服务"
+      ],
+      "apis": [
+        {
+          "name": "text",
+          "description": "根据文本查找控件",
+          "params": [
+            {
+              "name": "str",
+              "type": "string",
+              "required": true,
+              "description": "要查找的文本"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = text('确定').findOne();"
+        },
+        {
+          "name": "textContains",
+          "description": "根据文本包含查找控件",
+          "params": [
+            {
+              "name": "str",
+              "type": "string",
+              "required": true,
+              "description": "要包含的文本"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = textContains('确定').findOne();"
+        },
+        {
+          "name": "textStartsWith",
+          "description": "根据文本开头查找控件",
+          "params": [
+            {
+              "name": "prefix",
+              "type": "string",
+              "required": true,
+              "description": "文本前缀"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = textStartsWith('确').findOne();"
+        },
+        {
+          "name": "textEndsWith",
+          "description": "根据文本结尾查找控件",
+          "params": [
+            {
+              "name": "suffix",
+              "type": "string",
+              "required": true,
+              "description": "文本后缀"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = textEndsWith('定').findOne();"
+        },
+        {
+          "name": "textMatches",
+          "description": "根据正则表达式匹配文本查找控件",
+          "params": [
+            {
+              "name": "reg",
+              "type": "string|RegExp",
+              "required": true,
+              "description": "正则表达式"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = textMatches(/^\\d+$/).findOne();"
+        },
+        {
+          "name": "desc",
+          "description": "根据描述（content-desc）查找控件",
+          "params": [
+            {
+              "name": "str",
+              "type": "string",
+              "required": true,
+              "description": "描述文本"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = desc('返回').findOne();"
+        },
+        {
+          "name": "descContains",
+          "description": "根据描述包含查找控件",
+          "params": [
+            {
+              "name": "str",
+              "type": "string",
+              "required": true,
+              "description": "要包含的描述"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = descContains('返回').findOne();"
+        },
+        {
+          "name": "id",
+          "description": "根据 id 查找控件",
+          "params": [
+            {
+              "name": "resId",
+              "type": "string",
+              "required": true,
+              "description": "资源 ID"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = id('com.example:id/button').findOne();"
+        },
+        {
+          "name": "idContains",
+          "description": "根据 id 包含查找控件",
+          "params": [
+            {
+              "name": "str",
+              "type": "string",
+              "required": true,
+              "description": "ID 包含的字符串"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = idContains('button').findOne();"
+        },
+        {
+          "name": "className",
+          "description": "根据类名查找控件",
+          "params": [
+            {
+              "name": "str",
+              "type": "string",
+              "required": true,
+              "description": "类名"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = className('android.widget.Button').findOne();"
+        },
+        {
+          "name": "classNameContains",
+          "description": "根据类名包含查找控件",
+          "params": [
+            {
+              "name": "str",
+              "type": "string",
+              "required": true,
+              "description": "类名包含的字符串"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = classNameContains('Button').findOne();"
+        },
+        {
+          "name": "packageName",
+          "description": "根据包名查找控件",
+          "params": [
+            {
+              "name": "str",
+              "type": "string",
+              "required": true,
+              "description": "包名"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = packageName('com.tencent.mm').findOne();"
+        },
+        {
+          "name": "bounds",
+          "description": "根据边界查找控件",
+          "params": [
+            {
+              "name": "left",
+              "type": "number",
+              "required": true,
+              "description": "左边界"
+            },
+            {
+              "name": "top",
+              "type": "number",
+              "required": true,
+              "description": "上边界"
+            },
+            {
+              "name": "right",
+              "type": "number",
+              "required": true,
+              "description": "右边界"
+            },
+            {
+              "name": "bottom",
+              "type": "number",
+              "required": true,
+              "description": "下边界"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = bounds(0, 0, 100, 100).findOne();"
+        },
+        {
+          "name": "boundsInside",
+          "description": "查找边界在指定范围内的控件",
+          "params": [
+            {
+              "name": "left",
+              "type": "number",
+              "required": true,
+              "description": "左边界"
+            },
+            {
+              "name": "top",
+              "type": "number",
+              "required": true,
+              "description": "上边界"
+            },
+            {
+              "name": "right",
+              "type": "number",
+              "required": true,
+              "description": "右边界"
+            },
+            {
+              "name": "bottom",
+              "type": "number",
+              "required": true,
+              "description": "下边界"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = boundsInside(0, 0, 500, 500).findOne();"
+        },
+        {
+          "name": "boundsContains",
+          "description": "查找边界包含指定点的控件",
+          "params": [
+            {
+              "name": "x",
+              "type": "number",
+              "required": true,
+              "description": "X 坐标"
+            },
+            {
+              "name": "y",
+              "type": "number",
+              "required": true,
+              "description": "Y 坐标"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = boundsContains(100, 200).findOne();"
+        },
+        {
+          "name": "clickable",
+          "description": "查找可点击的控件",
+          "params": [
+            {
+              "name": "b",
+              "type": "boolean",
+              "required": false,
+              "default": true,
+              "description": "是否可点击"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = clickable(true).findOne();"
+        },
+        {
+          "name": "longClickable",
+          "description": "查找可长按的控件",
+          "params": [
+            {
+              "name": "b",
+              "type": "boolean",
+              "required": false,
+              "default": true,
+              "description": "是否可长按"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = longClickable(true).findOne();"
+        },
+        {
+          "name": "checkable",
+          "description": "查找可勾选的控件",
+          "params": [
+            {
+              "name": "b",
+              "type": "boolean",
+              "required": false,
+              "default": true,
+              "description": "是否可勾选"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = checkable(true).findOne();"
+        },
+        {
+          "name": "selected",
+          "description": "查找已选中的控件",
+          "params": [
+            {
+              "name": "b",
+              "type": "boolean",
+              "required": false,
+              "default": true,
+              "description": "是否已选中"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = selected(true).findOne();"
+        },
+        {
+          "name": "enabled",
+          "description": "查找已启用的控件",
+          "params": [
+            {
+              "name": "b",
+              "type": "boolean",
+              "required": false,
+              "default": true,
+              "description": "是否已启用"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = enabled(true).findOne();"
+        },
+        {
+          "name": "scrollable",
+          "description": "查找可滚动的控件",
+          "params": [
+            {
+              "name": "b",
+              "type": "boolean",
+              "required": false,
+              "default": true,
+              "description": "是否可滚动"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = scrollable(true).findOne();"
+        },
+        {
+          "name": "editable",
+          "description": "查找可编辑的控件",
+          "params": [
+            {
+              "name": "b",
+              "type": "boolean",
+              "required": false,
+              "default": true,
+              "description": "是否可编辑"
+            }
+          ],
+          "returns": {
+            "type": "UiSelector",
+            "description": "选择器对象"
+          },
+          "example": "var widget = editable(true).findOne();"
+        },
+        {
+          "name": "findOne",
+          "description": "查找符合条件的第一个控件（阻塞）",
+          "params": [
+            {
+              "name": "timeout",
+              "type": "number",
+              "required": false,
+              "description": "超时时间（毫秒）"
+            }
+          ],
+          "returns": {
+            "type": "UiObject",
+            "description": "控件对象，未找到返回 null"
+          },
+          "example": "var widget = text('确定').findOne(5000);"
+        },
+        {
+          "name": "findOnce",
+          "description": "查找符合条件的第一个控件（不阻塞）",
+          "params": [
+            {
+              "name": "i",
+              "type": "number",
+              "required": false,
+              "default": 0,
+              "description": "索引"
+            }
+          ],
+          "returns": {
+            "type": "UiObject",
+            "description": "控件对象，未找到返回 null"
+          },
+          "example": "var widget = text('确定').findOnce();"
+        },
+        {
+          "name": "find",
+          "description": "查找所有符合条件的控件",
+          "params": [],
+          "returns": {
+            "type": "UiCollection",
+            "description": "控件集合"
+          },
+          "example": "var widgets = text('确定').find();"
+        },
+        {
+          "name": "untilFind",
+          "description": "等待直到找到符合条件的控件",
+          "params": [],
+          "returns": {
+            "type": "UiCollection",
+            "description": "控件集合"
+          },
+          "example": "var widgets = text('确定').untilFind();"
+        },
+        {
+          "name": "exists",
+          "description": "判断控件是否存在",
+          "params": [],
+          "returns": {
+            "type": "boolean"
+          },
+          "example": "if (text('确定').exists()) { ... }"
+        },
+        {
+          "name": "waitFor",
+          "description": "等待控件出现",
+          "params": [],
+          "returns": {
+            "type": "void"
+          },
+          "example": "text('确定').waitFor();"
+        }
+      ],
+      "types": {
+        "UiObject": {
+          "description": "控件对象",
+          "methods": {
+            "click()": "点击控件",
+            "longClick()": "长按控件",
+            "setText(text)": "设置文本",
+            "scrollForward()": "向前滚动",
+            "scrollBackward()": "向后滚动",
+            "parent()": "获取父控件",
+            "child(i)": "获取第 i 个子控件",
+            "bounds()": "获取边界",
+            "text()": "获取文本",
+            "desc()": "获取描述",
+            "id()": "获取 ID",
+            "className()": "获取类名"
+          }
+        }
+      }
+    },
+    {
+      "id": "keys",
+      "name": "keys",
+      "title": "按键模拟",
+      "description": "提供物理按键模拟功能",
+      "apis": [
+        {
+          "name": "back",
+          "description": "模拟按下返回键",
+          "params": [],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "back();"
+        },
+        {
+          "name": "home",
+          "description": "模拟按下 Home 键",
+          "params": [],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "home();"
+        },
+        {
+          "name": "powerDialog",
+          "description": "弹出电源键菜单",
+          "params": [],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "powerDialog();"
+        },
+        {
+          "name": "notifications",
+          "description": "拉下通知栏",
+          "params": [],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "notifications();"
+        },
+        {
+          "name": "quickSettings",
+          "description": "显示快速设置",
+          "params": [],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "quickSettings();"
+        },
+        {
+          "name": "recents",
+          "description": "显示最近任务",
+          "params": [],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "recents();"
+        },
+        {
+          "name": "splitScreen",
+          "description": "分屏",
+          "params": [],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "splitScreen();"
+        }
+      ]
+    },
+    {
+      "id": "timers",
+      "name": "timers",
+      "title": "定时器",
+      "description": "提供定时执行功能",
+      "apis": [
+        {
+          "name": "setTimeout",
+          "description": "延迟执行函数",
+          "params": [
+            {
+              "name": "callback",
+              "type": "function",
+              "required": true,
+              "description": "回调函数"
+            },
+            {
+              "name": "delay",
+              "type": "number",
+              "required": true,
+              "description": "延迟时间（毫秒）"
+            },
+            {
+              "name": "args",
+              "type": "any",
+              "required": false,
+              "description": "传递给回调函数的参数"
+            }
+          ],
+          "returns": {
+            "type": "number",
+            "description": "定时器 ID"
+          },
+          "example": "var id = setTimeout(function() { console.log('Hello'); }, 1000);"
+        },
+        {
+          "name": "clearTimeout",
+          "description": "清除 setTimeout 定时器",
+          "params": [
+            {
+              "name": "id",
+              "type": "number",
+              "required": true,
+              "description": "定时器 ID"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "clearTimeout(id);"
+        },
+        {
+          "name": "setInterval",
+          "description": "周期性执行函数",
+          "params": [
+            {
+              "name": "callback",
+              "type": "function",
+              "required": true,
+              "description": "回调函数"
+            },
+            {
+              "name": "interval",
+              "type": "number",
+              "required": true,
+              "description": "间隔时间（毫秒）"
+            },
+            {
+              "name": "args",
+              "type": "any",
+              "required": false,
+              "description": "传递给回调函数的参数"
+            }
+          ],
+          "returns": {
+            "type": "number",
+            "description": "定时器 ID"
+          },
+          "example": "var id = setInterval(function() { console.log('Tick'); }, 1000);"
+        },
+        {
+          "name": "clearInterval",
+          "description": "清除 setInterval 定时器",
+          "params": [
+            {
+              "name": "id",
+              "type": "number",
+              "required": true,
+              "description": "定时器 ID"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "clearInterval(id);"
+        },
+        {
+          "name": "setImmediate",
+          "description": "立即执行函数（在当前事件循环结束后）",
+          "params": [
+            {
+              "name": "callback",
+              "type": "function",
+              "required": true,
+              "description": "回调函数"
+            },
+            {
+              "name": "args",
+              "type": "any",
+              "required": false,
+              "description": "传递给回调函数的参数"
+            }
+          ],
+          "returns": {
+            "type": "number",
+            "description": "定时器 ID"
+          },
+          "example": "var id = setImmediate(function() { console.log('Immediate'); });"
+        },
+        {
+          "name": "clearImmediate",
+          "description": "清除 setImmediate 定时器",
+          "params": [
+            {
+              "name": "id",
+              "type": "number",
+              "required": true,
+              "description": "定时器 ID"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "clearImmediate(id);"
+        }
+      ]
+    },
+    {
+      "id": "storages",
+      "name": "storages",
+      "title": "本地存储",
+      "description": "提供本地数据存储功能",
+      "apis": [
+        {
+          "name": "storages.create",
+          "description": "创建一个本地存储",
+          "params": [
+            {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "存储名称"
+            }
+          ],
+          "returns": {
+            "type": "Storage",
+            "description": "存储对象"
+          },
+          "example": "var storage = storages.create('mydata');"
+        },
+        {
+          "name": "storages.remove",
+          "description": "删除一个本地存储",
+          "params": [
+            {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "存储名称"
+            }
+          ],
+          "returns": {
+            "type": "boolean",
+            "description": "是否成功"
+          },
+          "example": "storages.remove('mydata');"
+        }
+      ],
+      "types": {
+        "Storage": {
+          "description": "存储对象",
+          "methods": {
+            "get(key, defaultValue)": "获取数据",
+            "put(key, value)": "存储数据",
+            "remove(key)": "删除数据",
+            "contains(key)": "判断是否包含某个键",
+            "clear()": "清空所有数据"
+          },
+          "example": "var storage = storages.create('mydata');\nstorage.put('name', 'Tom');\nvar name = storage.get('name', 'default');\nstorage.remove('name');\nstorage.clear();"
+        }
+      }
+    },
+    {
+      "id": "ui",
+      "name": "ui",
+      "title": "UI 用户界面",
+      "description": "提供创建用户界面的功能",
+      "requirements": [
+        "脚本开头使用 'ui'; 标记"
+      ],
+      "apis": [
+        {
+          "name": "ui.layout",
+          "description": "设置界面布局（XML）",
+          "params": [
+            {
+              "name": "xml",
+              "type": "xml",
+              "required": true,
+              "description": "XML 布局"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "ui.layout(\n  <vertical>\n    <button id=\"btn\" text=\"点击\" />\n  </vertical>\n);"
+        },
+        {
+          "name": "ui.inflate",
+          "description": "渲染布局并返回 View",
+          "params": [
+            {
+              "name": "xml",
+              "type": "xml",
+              "required": true,
+              "description": "XML 布局"
+            },
+            {
+              "name": "parent",
+              "type": "View",
+              "required": false,
+              "description": "父视图"
+            }
+          ],
+          "returns": {
+            "type": "View",
+            "description": "视图对象"
+          },
+          "example": "var view = ui.inflate(<button text=\"按钮\" />);"
+        },
+        {
+          "name": "ui.registerWidget",
+          "description": "注册自定义控件",
+          "params": [
+            {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "控件名称"
+            },
+            {
+              "name": "widget",
+              "type": "function",
+              "required": true,
+              "description": "控件构造函数"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "ui.registerWidget('mywidget', function() { ... });"
+        },
+        {
+          "name": "ui.run",
+          "description": "在 UI 线程执行函数",
+          "params": [
+            {
+              "name": "callback",
+              "type": "function",
+              "required": true,
+              "description": "回调函数"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "ui.run(function() { ui.btn.setText('新文本'); });"
+        },
+        {
+          "name": "ui.post",
+          "description": "在 UI 线程延迟执行函数",
+          "params": [
+            {
+              "name": "callback",
+              "type": "function",
+              "required": true,
+              "description": "回调函数"
+            },
+            {
+              "name": "delay",
+              "type": "number",
+              "required": false,
+              "description": "延迟时间（毫秒）"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "ui.post(function() { ui.btn.setText('新文本'); }, 1000);"
+        },
+        {
+          "name": "ui.statusBarColor",
+          "description": "设置状态栏颜色",
+          "params": [
+            {
+              "name": "color",
+              "type": "string",
+              "required": true,
+              "description": "颜色值"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "ui.statusBarColor('#FF0000');"
+        },
+        {
+          "name": "ui.showPopupMenu",
+          "description": "显示弹出菜单",
+          "params": [
+            {
+              "name": "view",
+              "type": "View",
+              "required": true,
+              "description": "锚点视图"
+            },
+            {
+              "name": "menu",
+              "type": "array",
+              "required": true,
+              "description": "菜单项数组"
+            }
+          ],
+          "returns": {
+            "type": "void"
+          },
+          "example": "ui.showPopupMenu(ui.btn, ['选项1', '选项2']);"
+        }
+      ],
+      "widgets": {
+        "vertical": "垂直布局",
+        "horizontal": "水平布局",
+        "linear": "线性布局",
+        "frame": "帧布局",
+        "relative": "相对布局",
+        "button": "按钮",
+        "text": "文本",
+        "input": "输入框",
+        "img": "图片",
+        "checkbox": "复选框",
+        "radiogroup": "单选组",
+        "radio": "单选按钮",
+        "switch": "开关",
+        "spinner": "下拉选择",
+        "progressbar": "进度条",
+        "seekbar": "拖动条",
+        "list": "列表",
+        "grid": "网格",
+        "tab": "标签页",
+        "viewpager": "滑动页面",
+        "webview": "网页视图",
+        "card": "卡片",
+        "drawer": "抽屉",
+        "toolbar": "工具栏",
+        "console": "控制台"
+      }
+    }
+  ]
+}

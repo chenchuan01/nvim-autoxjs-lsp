@@ -1,0 +1,17 @@
+{
+  "name": "autoxjs-lsp-server",
+  "version": "1.0.0",
+  "description": "AutoX.js Language Server Protocol implementation",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.11"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
