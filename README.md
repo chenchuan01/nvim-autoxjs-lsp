@@ -30,7 +30,6 @@
     require('autoxjs-lsp').setup()
   end,
   ft = { 'javascript' },
-  build = './install.sh',
 }
 ```
 
@@ -43,7 +42,7 @@ use {
     require('autoxjs-lsp').setup()
   end,
   ft = { 'javascript' },
-  run = './install.sh',
+  run = './build.sh',
 }
 ```
 
@@ -55,11 +54,11 @@ use {
 git clone https://github.com/chenchuan01/nvim-autoxjs-lsp.git ~/.local/share/nvim/site/pack/plugins/start/nvim-autoxjs-lsp
 ```
 
-2. 运行安装脚本：
+2. 运行构建脚本：
 
 ```bash
 cd ~/.local/share/nvim/site/pack/plugins/start/nvim-autoxjs-lsp
-./install.sh
+./build.sh
 ```
 
 3. 在 Neovim 配置中添加：
@@ -125,10 +124,10 @@ app.launchApp('微信');
 node --version
 ```
 
-重新运行安装脚本：
+重新运行构建脚本：
 ```bash
 cd ~/.local/share/nvim/site/pack/plugins/start/nvim-autoxjs-lsp
-./install.sh
+./build.sh
 ```
 
 ### 补全不工作
