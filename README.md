@@ -5,13 +5,22 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Neovim](https://img.shields.io/badge/Neovim-0.8%2B-green.svg)
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)
+![AutoX.js](https://img.shields.io/badge/AutoX.js-v6-orange.svg)
 
 ## 功能特性
 
 - ✅ **代码补全**：自动补全 AutoX.js 的所有 API
 - ✅ **悬停提示**：显示函数的详细文档
 - ✅ **函数签名**：显示参数类型和说明
-- ✅ **基于官方文档**：所有数据来自 AutoX.js v7 官方文档
+- ✅ **基于官方文档**：所有数据来自 AutoX.js v6 官方文档（ES5 语法）
+
+## 语法支持
+
+本 LSP 支持 **AutoX.js v6**，使用 **ES5 语法**。请注意：
+- 不支持 ES6+ 特性（如箭头函数、let/const、模板字符串等）
+- 使用 `var` 声明变量
+- 使用 `function` 关键字定义函数
+- 不支持 class、async/await 等现代语法
 
 ## 安装
 

@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "source": "AutoX.js v7 API Documentation",
-    "version": "v7 (Rhino API)",
+    "source": "AutoX.js v6 API Documentation",
+    "version": "v6 (Rhino API, ES5)",
     "created_date": "2026-03-17",
-    "description": "AutoX.js v7 详细 API 文档，包含所有核心模块的函数、参数、返回值和示例",
+    "description": "AutoX.js v6 详细 API 文档，包含所有核心模块的函数、参数、返回值和示例（ES5 语法）",
     "total_modules": 13,
     "note": "由于网络限制，部分内容基于 AutoX.js 标准 API 规范生成"
   },
