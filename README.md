@@ -15,11 +15,15 @@
 - ✅ **函数签名**：输入 `(` 显示参数说明
 
 **手机调试**
-- ✅ **连接手机**：通过 TCP 连接手机端 AutoX.js
+- ✅ **ADB 连接**：通过 ADB 端口转发连接手机
+- ✅ **局域网直连**：通过 IP 直接连接手机（无需 ADB）
+- ✅ **服务端模式**：启动 TCP 服务端，等待手机主动连接
+- ✅ **多设备管理**：同时连接多台设备，指定设备运行
+- ✅ **历史记录**：保存连接历史，快速重连
 - ✅ **运行脚本**：一键将当前文件推送到手机运行
+- ✅ **项目支持**：运行/保存整个项目到手机
 - ✅ **实时日志**：底部窗口显示手机端输出，带颜色区分级别
 - ✅ **停止脚本**：随时停止手机上正在运行的脚本
-- ✅ **保存文件**：将文件保存到手机本地
 
 ## 语法支持
 
@@ -34,6 +38,7 @@
 - Neovim >= 0.8.0
 - Node.js >= 18.0.0
 - npm 或 pnpm
+- ADB（仅 ADB 连接模式需要）
 
 ### 使用 lazy.nvim
 
@@ -84,13 +89,18 @@ require('autoxjs-lsp').setup({
   filetypes = { 'javascript' },
   -- 项目根目录
   root_dir = vim.fn.getcwd(),
-  -- 调试快捷键（设为 false 禁用对应快捷键）
+  -- 快捷键（设为 false 禁用）
   keymaps = {
-    connect = '<leader>xc',  -- 连接手机
-    run     = '<leader>xr',  -- 运行脚本
-    stop    = '<leader>xs',  -- 停止脚本
-    save    = '<leader>xv',  -- 保存到手机
-    log     = '<leader>xl',  -- 切换日志窗口
+    connect     = '<leader>xc',  -- ADB 连接
+    connect_lan = '<leader>xn',  -- 局域网直连
+    server      = '<leader>xS',  -- 启动服务端
+    history     = '<leader>xh',  -- 历史记录
+    devices     = '<leader>xd',  -- 设备列表
+    run         = '<leader>xr',  -- 运行脚本
+    run_project = '<leader>xR',  -- 运行项目
+    stop        = '<leader>xs',  -- 停止脚本
+    save        = '<leader>xv',  -- 保存到手机
+    log         = '<leader>xl',  -- 切换日志窗口
   },
 })
 ```
@@ -107,61 +117,103 @@ require('autoxjs-lsp').setup({
 | `K` | 查看光标处函数文档 |
 | `<C-k>` | 查看函数签名 |
 
-### 手机调试（ADB 连接）
+### 连接模式
 
-#### 连接准备
+#### 模式一：ADB 连接
 
-1. **安装 ADB 工具**：确保 `adb` 命令可用
-2. **连接设备**：
-   - USB 连接：手机通过 USB 线连接电脑，开启 USB 调试
-   - 网络连接：执行 `adb connect <设备IP>:5555` 连接远程设备
-3. **验证连接**：
-   ```bash
-   adb devices
-   # 应显示连接的设备，例如：
-   # List of devices attached
-   # 19231FDF6008VG   device
-   ```
-4. **手机端设置**：在 AutoX.js 应用中开启"连接电脑"功能
-
-#### 连接设备
+适合 USB 连接或已配置 `adb connect` 的场景。
 
 ```vim
-:AutoXConnect [device_serial[:port]]
+:AutoXConnect                        " 使用默认设备
+:AutoXConnect 19231FDF6008VG         " 指定设备序列号
+:AutoXConnect 19231FDF6008VG:9317    " 指定设备和端口
 ```
 
-示例：
+准备步骤：
+1. 安装 ADB，手机开启 USB 调试
+2. `adb devices` 确认设备已连接
+3. 手机端 AutoX.js 开启"连接电脑"功能
+
+#### 模式二：局域网直连
+
+适合手机和电脑在同一局域网的场景，无需 ADB。
+
 ```vim
-:AutoXConnect           # 使用默认设备
-:AutoXConnect 19231FDF6008VG    # 指定设备序列号
-:AutoXConnect 19231FDF6008VG:9317  # 指定设备和端口
+:AutoXConnectLAN 192.168.1.100        " 默认端口 9317
+:AutoXConnectLAN 192.168.1.100:9317   " 指定端口
 ```
 
-此命令会自动执行 `adb forward tcp:9317 tcp:9317` 并连接到 `127.0.0.1:9317`。
+准备步骤：
+1. 手机端 AutoX.js 开启"连接电脑"，记录显示的 IP 地址
+2. 确保手机和电脑在同一局域网
 
-#### 运行和调试
+#### 模式三：服务端模式
+
+Neovim 作为服务端，等待手机主动连接。适合手机端主动发起连接的场景。
+
+```vim
+:AutoXStartServer        " 默认端口 9317
+:AutoXStartServer 6789   " 指定端口
+:AutoXStopServer         " 停止服务端
+```
+
+### 历史记录
+
+连接成功后自动保存历史，下次可快速重连：
+
+```vim
+:AutoXHistory    " 弹出历史列表，选择后自动连接
+```
+
+### 多设备管理
+
+```vim
+:AutoXDevices              " 列出所有已连接设备
+:AutoXSetDevice <id前缀>   " 切换活跃设备
+:AutoXDisconnect           " 断开活跃设备
+:AutoXDisconnectAll        " 断开所有设备
+```
+
+### 脚本操作
 
 | 快捷键 | 命令 | 说明 |
 |--------|------|------|
-| `<leader>xc` | `:AutoXConnect [device[:port]]` | 通过 ADB 连接手机 |
-| `<leader>xr` | `:AutoXRun` | 将当前文件推送到手机运行 |
-| `<leader>xs` | `:AutoXStop` | 停止手机上的脚本 |
-| `<leader>xv` | `:AutoXSave` | 保存当前文件到手机 |
+| `<leader>xr` | `:AutoXRun` | 运行当前文件 |
+| `<leader>xR` | `:AutoXRunProject` | 运行整个项目 |
+| `<leader>xs` | `:AutoXStop` | 停止脚本 |
+| `<leader>xv` | `:AutoXSave` | 保存文件到手机 |
 | `<leader>xl` | `:AutoXLog` | 切换日志窗口 |
-| —            | `:AutoXDisconnect` | 断开连接 |
-| —            | `:AutoXClear` | 清空日志 |
+| — | `:AutoXSaveProject` | 保存项目到手机 |
+| — | `:AutoXClear` | 清空日志 |
 
-日志窗口中按 `q` 关闭。
+所有脚本命令支持指定设备 ID：
 
-#### 故障排除
+```vim
+:AutoXRun <device_id>     " 在指定设备运行
+:AutoXSave <device_id>    " 保存到指定设备
+```
 
-##### 连接错误：`ECONNREFUSED 127.0.0.1:9317`
-- ✅ ADB 端口转发成功
-- ❌ 手机端 AutoX.js 未响应
-- **解决方法**：
-  1. 确认手机端 AutoX.js 已开启"连接电脑"
-  2. 重启手机端 AutoX.js 应用
-  3. 保持 AutoX.js 应用在前台运行
+### 项目支持
+
+在项目目录创建 `.autoxjs.json` 配置文件：
+
+```vim
+:AutoXNewProject          " 在当前目录新建项目
+:AutoXNewProject ~/myapp  " 在指定目录新建项目
+```
+
+`.autoxjs.json` 格式：
+
+```json
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "main": "main.js",
+  "ignore": ["node_modules", ".git"]
+}
+```
+
+运行项目会将目录下所有 `.js` 文件（排除 `ignore` 列表）一并发送到手机。
 
 ## 支持的模块
 
@@ -195,12 +247,11 @@ node --version  # 需要 >= 18.0.0
 :LspInfo         " 查看 LSP 状态
 ```
 
-### 无法连接手机
+### 连接失败
 
-- 确认手机和电脑在同一局域网
-- 确认手机端 AutoX.js 已开启"连接电脑"
-- 检查防火墙是否放行 9317 端口
-- 尝试 `:AutoXConnect <ip>:9317` 显式指定端口
+- **ADB 模式**：`adb devices` 确认设备在线，手机端 AutoX.js 开启"连接电脑"
+- **局域网模式**：确认手机和电脑在同一局域网，检查防火墙是否放行端口
+- **服务端模式**：确认手机端 AutoX.js 配置了正确的电脑 IP 和端口
 
 ## 贡献
 

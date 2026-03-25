@@ -17,59 +17,129 @@ M.default_config = {
     return vim.fn.getcwd()
   end,
   settings = {},
-  -- 调试快捷键前缀（设为 false 禁用）
   keymaps = {
-    connect  = '<leader>xc',
-    run      = '<leader>xr',
-    stop     = '<leader>xs',
-    save     = '<leader>xv',
-    log      = '<leader>xl',
+    connect     = '<leader>xc',
+    run         = '<leader>xr',
+    stop        = '<leader>xs',
+    save        = '<leader>xv',
+    log         = '<leader>xl',
+    connect_lan = '<leader>xn',
+    server      = '<leader>xS',
+    history     = '<leader>xh',
+    devices     = '<leader>xd',
+    run_project = '<leader>xR',
   },
 }
 
+-- 解析 "host:port" 或 "device[:port]" 参数
+local function parse_arg(arg, default_port)
+  if not arg or arg == '' then return nil, default_port end
+  local host, port = arg:match('^(.+):(%d+)$')
+  if host then
+    return host, tonumber(port)
+  end
+  return arg, default_port
+end
+
 -- 注册调试命令和快捷键
 local function setup_debug(config)
-  local device = require('autoxjs-lsp.device')
-  local ui     = require('autoxjs-lsp.ui')
+  local device  = require('autoxjs-lsp.device')
+  local ui      = require('autoxjs-lsp.ui')
+  local project = require('autoxjs-lsp.project')
 
-  -- 用户命令
+  -- ADB 连接
   vim.api.nvim_create_user_command('AutoXConnect', function(opts)
-    local arg = opts.args ~= '' and opts.args or nil
-    local dev_serial = nil
-    local port = 9317
-    if arg then
-      -- 支持格式：设备序列号[:端口]
-      local d, p = arg:match('^(.+):(%d+)$')
-      if d then
-        dev_serial = d
-        port = tonumber(p)
-      else
-        dev_serial = arg
-      end
+    local dev, port = parse_arg(opts.args, 9317)
+    device.connect(dev, port)
+  end, { nargs = '?', desc = 'AutoX.js: ADB 连接 [device[:port]]' })
+
+  -- 局域网直连
+  vim.api.nvim_create_user_command('AutoXConnectLAN', function(opts)
+    local host, port = parse_arg(opts.args, 9317)
+    if not host then
+      vim.notify('AutoX.js: 请指定 IP，例如 :AutoXConnectLAN 192.168.1.100', vim.log.levels.WARN)
+      return
     end
-    device.connect(dev_serial, port)
-  end, { nargs = '?', desc = 'AutoX.js: 通过 ADB 连接手机 [device[:port]]' })
+    device.connect_lan(host, port)
+  end, { nargs = '?', desc = 'AutoX.js: 局域网直连 <host[:port]>' })
 
-  vim.api.nvim_create_user_command('AutoXDisconnect', function()
-    device.disconnect()
-  end, { desc = 'AutoX.js: 断开连接' })
+  -- 启动服务端
+  vim.api.nvim_create_user_command('AutoXStartServer', function(opts)
+    local port = tonumber(opts.args ~= '' and opts.args or nil) or 9317
+    device.start_server(port)
+  end, { nargs = '?', desc = 'AutoX.js: 启动 TCP 服务端 [port]' })
 
-  vim.api.nvim_create_user_command('AutoXRun', function()
-    device.run_file()
-  end, { desc = 'AutoX.js: 在手机上运行当前文件' })
+  -- 停止服务端
+  vim.api.nvim_create_user_command('AutoXStopServer', function()
+    device.stop_server()
+  end, { desc = 'AutoX.js: 停止 TCP 服务端' })
 
-  vim.api.nvim_create_user_command('AutoXStop', function()
-    device.stop()
-  end, { desc = 'AutoX.js: 停止手机上的脚本' })
+  -- 断开连接
+  vim.api.nvim_create_user_command('AutoXDisconnect', function(opts)
+    device.disconnect(opts.args ~= '' and opts.args or nil)
+  end, { nargs = '?', desc = 'AutoX.js: 断开连接 [device_id]' })
 
-  vim.api.nvim_create_user_command('AutoXSave', function()
-    device.save_file()
-  end, { desc = 'AutoX.js: 保存当前文件到手机' })
+  -- 断开所有连接
+  vim.api.nvim_create_user_command('AutoXDisconnectAll', function()
+    device.disconnect_all()
+  end, { desc = 'AutoX.js: 断开所有连接' })
 
+  -- 列出设备
+  vim.api.nvim_create_user_command('AutoXDevices', function()
+    device.list_devices()
+    ui.open()
+  end, { desc = 'AutoX.js: 列出已连接设备' })
+
+  -- 设置活跃设备
+  vim.api.nvim_create_user_command('AutoXSetDevice', function(opts)
+    if opts.args == '' then
+      vim.notify('AutoX.js: 请指定设备 ID 前缀', vim.log.levels.WARN)
+      return
+    end
+    device.set_active(opts.args)
+  end, { nargs = 1, desc = 'AutoX.js: 设置活跃设备 <device_id>' })
+
+  -- 运行脚本
+  vim.api.nvim_create_user_command('AutoXRun', function(opts)
+    device.run_file(opts.args ~= '' and opts.args or nil)
+  end, { nargs = '?', desc = 'AutoX.js: 运行当前文件 [device_id]' })
+
+  -- 停止脚本
+  vim.api.nvim_create_user_command('AutoXStop', function(opts)
+    device.stop(opts.args ~= '' and opts.args or nil)
+  end, { nargs = '?', desc = 'AutoX.js: 停止脚本 [device_id]' })
+
+  -- 保存文件
+  vim.api.nvim_create_user_command('AutoXSave', function(opts)
+    device.save_file(opts.args ~= '' and opts.args or nil)
+  end, { nargs = '?', desc = 'AutoX.js: 保存文件到手机 [device_id]' })
+
+  -- 运行项目
+  vim.api.nvim_create_user_command('AutoXRunProject', function(opts)
+    device.run_project(opts.args ~= '' and opts.args or nil)
+  end, { nargs = '?', desc = 'AutoX.js: 运行项目 [device_id]' })
+
+  -- 保存项目
+  vim.api.nvim_create_user_command('AutoXSaveProject', function(opts)
+    device.save_project(opts.args ~= '' and opts.args or nil)
+  end, { nargs = '?', desc = 'AutoX.js: 保存项目到手机 [device_id]' })
+
+  -- 新建项目
+  vim.api.nvim_create_user_command('AutoXNewProject', function(opts)
+    project.new(opts.args ~= '' and opts.args or nil)
+  end, { nargs = '?', desc = 'AutoX.js: 新建项目 [path]' })
+
+  -- 历史记录
+  vim.api.nvim_create_user_command('AutoXHistory', function()
+    device.pick_history()
+  end, { desc = 'AutoX.js: 从历史记录连接' })
+
+  -- 日志窗口
   vim.api.nvim_create_user_command('AutoXLog', function()
     ui.toggle()
   end, { desc = 'AutoX.js: 切换日志窗口' })
 
+  -- 清空日志
   vim.api.nvim_create_user_command('AutoXClear', function()
     ui.clear()
   end, { desc = 'AutoX.js: 清空日志' })
@@ -78,11 +148,21 @@ local function setup_debug(config)
   local km = config.keymaps
   if km then
     local o = { noremap = true, silent = true }
-    if km.connect  then vim.keymap.set('n', km.connect,  ':AutoXConnect<CR>',    vim.tbl_extend('force', o, { desc = 'AutoX: 连接手机' })) end
-    if km.run      then vim.keymap.set('n', km.run,      ':AutoXRun<CR>',        vim.tbl_extend('force', o, { desc = 'AutoX: 运行脚本' })) end
-    if km.stop     then vim.keymap.set('n', km.stop,     ':AutoXStop<CR>',       vim.tbl_extend('force', o, { desc = 'AutoX: 停止脚本' })) end
-    if km.save     then vim.keymap.set('n', km.save,     ':AutoXSave<CR>',       vim.tbl_extend('force', o, { desc = 'AutoX: 保存到手机' })) end
-    if km.log      then vim.keymap.set('n', km.log,      ':AutoXLog<CR>',        vim.tbl_extend('force', o, { desc = 'AutoX: 日志窗口' })) end
+    local function kset(key, cmd, desc)
+      if key then
+        vim.keymap.set('n', key, cmd, vim.tbl_extend('force', o, { desc = desc }))
+      end
+    end
+    kset(km.connect,     ':AutoXConnect<CR>',      'AutoX: ADB 连接')
+    kset(km.connect_lan, ':AutoXConnectLAN<CR>',   'AutoX: 局域网连接')
+    kset(km.server,      ':AutoXStartServer<CR>',  'AutoX: 启动服务端')
+    kset(km.history,     ':AutoXHistory<CR>',      'AutoX: 历史连接')
+    kset(km.devices,     ':AutoXDevices<CR>',      'AutoX: 设备列表')
+    kset(km.run,         ':AutoXRun<CR>',          'AutoX: 运行脚本')
+    kset(km.run_project, ':AutoXRunProject<CR>',   'AutoX: 运行项目')
+    kset(km.stop,        ':AutoXStop<CR>',         'AutoX: 停止脚本')
+    kset(km.save,        ':AutoXSave<CR>',         'AutoX: 保存到手机')
+    kset(km.log,         ':AutoXLog<CR>',          'AutoX: 日志窗口')
   end
 end
 
@@ -94,7 +174,6 @@ function M.setup(opts)
   local plugin_root = get_plugin_root()
   local server_path = plugin_root .. '/server/server.js'
 
-  -- 检查服务器文件是否存在
   if vim.fn.filereadable(server_path) == 0 then
     vim.notify(
       'AutoX.js LSP: server.js not found at ' .. server_path ..
@@ -104,39 +183,33 @@ function M.setup(opts)
     return
   end
 
-  -- 注册 LSP 配置
+  -- 注册 LSP
   vim.api.nvim_create_autocmd('FileType', {
     pattern = config.filetypes,
-    callback = function(ev)
+    callback = function()
       local root_dir = type(config.root_dir) == 'function'
         and config.root_dir()
         or config.root_dir
-
       vim.lsp.start({
-        name = 'autoxjs_lsp',
-        cmd = { 'node', server_path, '--stdio' },
-        root_dir = root_dir,
-        settings = config.settings,
+        name         = 'autoxjs_lsp',
+        cmd          = { 'node', server_path, '--stdio' },
+        root_dir     = root_dir,
+        settings     = config.settings,
         capabilities = vim.lsp.protocol.make_client_capabilities(),
-        on_attach = function(client, bufnr)
-          -- 设置 LSP 快捷键
+        on_attach    = function(_, bufnr)
           local bufopts = { noremap = true, silent = true, buffer = bufnr }
-          vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+          vim.keymap.set('n', 'K',     vim.lsp.buf.hover,          bufopts)
           vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
         end,
-        on_exit = function(code, signal, client_id)
+        on_exit = function(code)
           if code ~= 0 then
-            vim.notify(
-              'AutoX.js LSP exited with code ' .. code,
-              vim.log.levels.WARN
-            )
+            vim.notify('AutoX.js LSP exited with code ' .. code, vim.log.levels.WARN)
           end
         end,
       })
     end,
   })
 
-  -- 注册调试命令和快捷键
   setup_debug(config)
 end
 
